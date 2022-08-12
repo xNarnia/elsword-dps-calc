@@ -70,10 +70,10 @@
                 font-size: 1.4em;
             }
             .up {
-                background-image: url("./up-arrow.svg");
+                background-image: url("./img/up-arrow.svg");
             }
             .down {
-                background-image: url("./down-arrow.svg");
+                background-image: url("./img/down-arrow.svg");
             }
 
             .up,
@@ -236,9 +236,20 @@
                         this.value = String(this.value).padStart(2, '0');
                     }
                 });
+
+                $(DPSInput).on("input", function() {
+                    var val = $(DPSInput).val();
+                    if(val != ""){
+                        val = parseInt(val.replace(/,/g, ""));
+                        $(DPSInput).val(numberWithCommas(val));
+                    }
+                });
                 $(DPSInput).focusout(function (){
-                    var val = parseInt($(DPSInput).val().replace(",", ""));
-                    $(DPSInput).val(numberWithCommas(val));
+                    var val = $(DPSInput).val();
+                    if(val != ""){
+                        val = parseInt(val.replace(/,/g, ""));
+                        $(DPSInput).val(numberWithCommas(val));
+                    }
                 });
                 $(DPSInput).focus(function (){
                     this.value = "";

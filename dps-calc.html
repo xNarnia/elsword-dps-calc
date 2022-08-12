@@ -1,0 +1,282 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Itim">
+
+        <style>
+            body{
+                text-align: center;
+                background-image: url("./img/night-sky.jpg");
+            }
+            body, input {
+                font-family: Itim;
+            }
+
+            h1 {
+                background-image: url("./img/dps.png");
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center;
+            }
+
+            /* Elsword Styling */ 
+            .group {
+                background-color: #004bb588;
+                padding: 2em .6em;
+                border-radius: .6em;
+                box-shadow: inset 0 0 .3em #555;
+            }
+
+            .group.light,
+            .enhanceOptions {
+                background-color: white;
+                box-shadow: inset 0 0 .4em rgb(187, 205, 255);
+                border-radius: .6em;
+            }
+            
+            .container {
+                display: inline-block;
+                width: 18em;
+                padding-top: 0em;
+                padding-bottom: .6em;
+            }
+
+            #dpsInput{
+                width:9.4em;
+
+                font-size: 1.5em;
+                text-align: center;
+            }
+
+            .selector {
+                width:3.5em;
+                display: inline-block;
+                text-align: center;
+                font-size: 1.5em;
+            }
+            .arrow {
+                display: inline-block;
+
+                height: 3.5em;
+                width: 3.5em;
+            }
+            .timeInput {
+                display: inline-block;
+
+                width: 1.6em;
+                height: 1.6em;
+
+                text-align: center;
+                font-size: 1.4em;
+            }
+            .up {
+                background-image: url("./up-arrow.svg");
+            }
+            .down {
+                background-image: url("./down-arrow.svg");
+            }
+
+            .up,
+            .down {
+                background-size: contain;
+                background-color: transparent;
+                border-style: none;
+                cursor:pointer;
+            }
+
+            #calculate {
+                padding: 1em 1em;
+
+                font-size: 1.5em;
+                font-family: Itim;
+                
+                border: 1px solid rgb(204, 204, 204);
+            }
+            
+            #calculate:hover {
+                background-color: rgb(245, 248, 255);
+            }
+
+            #calculate:active {
+                background-color: rgb(235, 241, 255);
+            }
+            
+            #calculate:disabled {
+                background-color: rgb(160, 160, 160);
+            }
+            
+            .devnote {
+                font-size: 1.5em;
+                color:white;
+                text-shadow: .1em .1em .2em #000;
+            }
+
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            var DPSInput = "#dpsInput";
+            var HourInput = "#hours";
+            var MinuteInput = "#minutes";
+            var SecondInput = "#seconds";
+            var CalculateButton = "#calculate";
+            var AllTimeInputs = ".timeInput";
+
+            function LimitInputs(){
+                LimitHours();
+                LimitMinutes();
+                LimitSeconds();
+            }
+
+            function LimitHours(target) {
+                if(target == null) {
+                    target = HourInput;
+                }
+
+                ProcessInputRange(target, 0, 23);
+            }
+
+            function LimitMinutes(target) {
+                if(target == null) {
+                    target = MinuteInput;
+                }
+
+                ProcessInputRange(target, 0, 59);
+            }
+
+            function LimitSeconds(target){
+                if(target == null) {
+                    target = SecondInput;
+                }
+
+                ProcessInputRange(target, 0, 59);
+            }
+            var stuff;
+            function ProcessInputRange(inputTarget, start, end) {
+                var val = inputTarget.value;
+                if(val == null){
+                    val = $(inputTarget).val();
+                }
+
+                if(val < start) {
+                    $(inputTarget).val(start);
+                }
+                else if (val > end) {
+                    $(inputTarget).val(end);
+                }
+            }
+
+            function CalculateDPS(){
+                var dps = parseInt($(DPSInput).val());
+                var hours = parseInt($(HourInput).val());
+                var minutes = parseInt($(MinuteInput).val());
+                var seconds = parseInt($(SecondInput).val());
+
+                var dpsPerMinute = dps / ((hours * 60) + minutes + (seconds / 60));
+                alert(numberWithCommas(Math.round(dpsPerMinute)) + " damage per minute");
+            }
+            
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+
+            $(document).ready(function() {
+                $(AllTimeInputs).val("00");
+                $(HourInput).on("input", function() {
+                    LimitHours(this);
+                });
+                $(HourInput).on('keydown', function(e) { 
+                    var keyCode = e.keyCode || e.which; 
+
+                    if (keyCode == 9) { 
+                        e.preventDefault(); 
+                        $(MinuteInput).focus();
+                    }
+                });
+                $(MinuteInput).on('keydown', function(e) { 
+                    var keyCode = e.keyCode || e.which; 
+
+                    if (keyCode == 9) { 
+                        e.preventDefault(); 
+                        $(SecondInput).focus();
+                    }
+                });
+                
+                $(SecondInput).on('keydown', function(e) { 
+                    var keyCode = e.keyCode || e.which; 
+
+                    if (keyCode == 9) { 
+                        e.preventDefault(); 
+                        $(CalculateButton).focus();
+                    }
+                });
+
+                $(MinuteInput).on("input", function() {
+                    LimitMinutes(this);
+                });
+                $(SecondInput).on("input", function() {
+                    LimitSeconds(this);
+                });
+                $(AllTimeInputs).focus(function (){
+                    this.value = "";
+                });
+                $(AllTimeInputs).focusout(function (){
+                    LimitInputs();
+                    
+                    if (this.value < 10 && this.value >= 0) {
+                        this.value = String(this.value).padStart(2, '0');
+                    }
+                });
+
+                $(CalculateButton).click(function (){
+                    CalculateDPS();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container group light">
+            <h1>DPS Calculator</h1>
+            <div class="group">
+                <div class="DPS">
+                    <input id="dpsInput" type="text" placeholder="Enter DPS Here">
+                </div>
+                <br />
+                <div class="TimeSelector">
+                    <div class="hour selector">
+                        <input class="arrow up" type="button"><br />
+                        <input id="hours" class="timeInput" type="number"><br />
+                        <input class="arrow down" type="button"><br />
+                        Hour
+                    </div>
+                    <div class="min selector">
+                        <input class="arrow up" type="button"><br />
+                        <input id="minutes" class="timeInput" type="number"><br />
+                        <input class="arrow down" type="button"><br />
+                        Min
+                    </div>
+                    <div class="sec selector">
+                        <input class="arrow up" type="button"><br />
+                        <input id="seconds" class="timeInput" type="number"><br />
+                        <input class="arrow down" type="button"><br />
+                        Sec
+                    </div>
+                </div>
+                <br />
+                <button id="calculate" class="group light">Calculate</button>
+            </div>
+        </div>
+        <div class="devnote">
+            Made with love by Narnia#7777 💖
+        </div>
+    </body>
+</html>

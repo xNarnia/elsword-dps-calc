@@ -176,7 +176,7 @@
             }
 
             function CalculateDPS(){
-                var dps = parseInt($(DPSInput).val());
+                var dps = parseInt($(DPSInput).val().replace(/,/g, ""));
                 var hours = parseInt($(HourInput).val());
                 var minutes = parseInt($(MinuteInput).val());
                 var seconds = parseInt($(SecondInput).val());

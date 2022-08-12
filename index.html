@@ -237,7 +237,7 @@
                     }
                 });
                 $(DPSInput).focusout(function (){
-                    var val = parseInt($(DPSInput).val().replace(",", ""));
+                    var val = parseInt($(DPSInput).val().replace(/,/g, ""));
                     $(DPSInput).val(numberWithCommas(val));
                 });
                 $(DPSInput).focus(function (){

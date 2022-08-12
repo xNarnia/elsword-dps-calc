@@ -236,6 +236,13 @@
                         this.value = String(this.value).padStart(2, '0');
                     }
                 });
+                $(DPSInput).focusout(function (){
+                    var val = parseInt($(DPSInput).val().replace(",", ""));
+                    $(DPSInput).val(numberWithCommas(val));
+                });
+                $(DPSInput).focus(function (){
+                    this.value = "";
+                });
 
                 $(CalculateButton).click(function (){
                     CalculateDPS();

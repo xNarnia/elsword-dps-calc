@@ -2,4 +2,4 @@
 
 This is a GitHub.io page!
 
-https://xnarnia.github.io/enhancement-calc/
+https://xnarnia.github.io/elsword-dpm-calc/
